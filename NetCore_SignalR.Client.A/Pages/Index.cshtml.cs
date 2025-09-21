@@ -31,8 +31,8 @@ public class IndexModel : PageModel
 
     public void OnGet()
     {
-        bool isKeyCached = _memoryCache.TryGetValue<string>(CacheKey, out string? cachedValue);
+        bool isKeyCached = _memoryCache.TryGetValue<string>(SessionKeys.KeySent, out string? cachedValue);
 
-        CacheKey = isKeyCached ? cachedValue!: "No value cached";
+        CacheKey = isKeyCached ? cachedValue!: "No value cached yet";
     }
 }

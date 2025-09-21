@@ -28,7 +28,7 @@ public static class CacheNotificationHubExtension
             IMemoryCache? memoryCache = builder.Services.BuildServiceProvider().GetService<IMemoryCache>();
             if (memoryCache == null) return;
 
-            memoryCache?.CreateEntry("KeySent")?.SetValue(key);
+            memoryCache?.CreateEntry(SessionKeys.KeySent)?.SetValue(key);
         });
 
         return services;
