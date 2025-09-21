@@ -11,7 +11,7 @@
 
 <form method="post" class="row g-3">
     <div class="col-auto">
-        <input name="CacheKey" class="form-control" />
+        <input name="CacheKey" class="form-control" value="@Model.CacheKey" />
     </div>
     <div class="col-auto">
         <button type="submit" asp-page-handler="SendUpdate" class="btn btn-success">Send a message</button>
