@@ -35,4 +35,29 @@ public class IndexModel : PageModel
 
         CacheKey = isKeyCached ? cachedValue!: "No value cached yet";
     }
+
+    public async Task OnPostSendUpdate()
+    {
+        string cacheKey = "DefaultKey";
+        if (!string.IsNullOrEmpty(CacheKey))
+        {
+            cacheKey = CacheKey;
+        }
+        string json = Json.Serialize(new { CacheKey = cacheKey });
+        HttpContent httpContent = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+        await _httpClient.PostAsync("https://localhost:44312/cache/cache-updated", httpContent)
+            .ContinueWith(task =>
+            {
+                if (task.IsCompletedSuccessfully)
+                {
+                    // Handle success
+                    var s = task.Result;
+                }
+                else
+                {
+                    // Handle failure
+                    var s = task.Result;
+                }
+            });
+    }
 }
