@@ -1,0 +1,16 @@
+{
+  "profiles": {
+    "Docker Compose All": {
+      "commandName": "DockerCompose",
+      "commandVersion": "1.0",
+      "composeLaunchAction": "LaunchBrowser",
+      "composeLaunchServiceName": "netcore_signalr.client.a",
+      "composeLaunchUrl": "{Scheme}://localhost:{ServicePort}/",
+      "serviceActions": {
+        "netcore_signalr.client.a": "StartDebugging",
+        "netcore_signalr.client.b": "StartDebugging",
+        "netcore_signalr.notification.api": "StartDebugging"
+      }
+    }
+  }
+}

@@ -1,0 +1,6 @@
+@NetCore_SignalR.Notification.Api_HostAddress = http://localhost:5262
+
+GET {{NetCore_SignalR.Notification.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

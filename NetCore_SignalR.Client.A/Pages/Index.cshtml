@@ -1,0 +1,31 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<h1>Testing SignalR Messages</h1>
+
+<br/>
+<br/>
+
+<form method="post" class="row g-3">
+    <div class="col-auto">
+        <input name="CacheKey" class="form-control" />
+    </div>
+    <div class="col-auto">
+        <button type="submit" asp-page-handler="SendUpdate" class="btn btn-success">Send a message</button>
+    </div>
+</form>
+
+<br/>
+<br/>
+
+<form method="post" class="row g-2">
+    <div class="col-auto">
+        <input name="CacheKey" class="form-control col-auto" />
+    </div>
+    <div class="col-auto">
+        <button type="submit" asp-page-handler="InvokeUpdated" class="btn btn-success col-auto">Invoke a message</button>
+    </div>
+</form>
