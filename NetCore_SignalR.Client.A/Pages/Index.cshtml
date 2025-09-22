@@ -4,10 +4,28 @@
     ViewData["Title"] = "Home page";
 }
 
+@* Display Errors *@
+@if (!ModelState.IsValid)
+{
+    @foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+    {
+        <div class="alert alert-danger">@error.ErrorMessage</div>
+    }
+}
+
+@* Display Success message *@
+@if (!string.IsNullOrEmpty(Convert.ToString(ViewData["SuccessMessage"])))
+{
+    <div class="alert alert-success">@ViewData["SuccessMessage"]</div>
+}
+
+
+
+
 <h1>Testing SignalR Messages</h1>
 
-<br/>
-<br/>
+<br />
+<br />
 
 <form method="post" class="row g-3">
     <div class="col-auto">
@@ -18,8 +36,8 @@
     </div>
 </form>
 
-<br/>
-<br/>
+<br />
+<br />
 
 <form method="post" class="row g-2">
     <div class="col-auto">

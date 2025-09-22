@@ -1,8 +1,10 @@
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
+using NetCore_SignalR.Common.CacheStore;
 
 namespace NetCore_SignalR.Client.A.Pages;
 
@@ -10,19 +12,25 @@ public class IndexModel : PageModel
 {
     private readonly ILogger<IndexModel> _logger;
     private readonly IMemoryCache _memoryCache;
+    private readonly IAppCache _appCache;
     private readonly HttpClient _httpClient;
+    private readonly SignalROptions _signalROptions;
     private readonly AppHubConnectionOptions _appHubConnectionOptions;
     private readonly HubConnection _cacheNotificationHubConnection;
 
     public IndexModel(
         ILogger<IndexModel> logger,
         IMemoryCache memoryCache,
+        IAppCache appCache,
         HttpClient httpClient, 
-        IOptions<AppHubConnectionOptions> appHubConnectionOptions)
+        IOptions<AppHubConnectionOptions> appHubConnectionOptions,
+        IOptions<SignalROptions> signalROptions)
     {
         _logger = logger;
         _memoryCache = memoryCache;
+        _appCache = appCache;
         _httpClient = httpClient;
+        _signalROptions = signalROptions.Value;
         _appHubConnectionOptions = appHubConnectionOptions.Value;
         _cacheNotificationHubConnection = _appHubConnectionOptions.CacheNotificationHubConnection;
     }
@@ -31,32 +39,40 @@ public class IndexModel : PageModel
 
     public void OnGet()
     {
-        bool isKeyCached = _memoryCache.TryGetValue<string>(SessionKeys.KeySent, out string? cachedValue);
+        // Here we read from the in-memory cache what is saved on the event triggered by the SignalR notification
+        // This event is registered in UseNotificationHubEventsExtension.
 
-        CacheKey = isKeyCached ? cachedValue!: "No value cached yet";
+        bool isKeyCached = _memoryCache.TryGetValue<string>(SessionKeys.KeySent, out string? cachedValue);
+        CacheKey = isKeyCached ? cachedValue! : "No value cached yet";
     }
 
     public async Task OnPostSendUpdate()
     {
-        string cacheKey = "DefaultKey";
-        if (!string.IsNullOrEmpty(CacheKey))
+        ModelState.Clear();
+
+        if (string.IsNullOrEmpty(CacheKey))
         {
-            cacheKey = CacheKey;
+            ModelState.AddModelError(string.Empty, $"Cache key cannot be null.");
+            return;
         }
-        string json = Json.Serialize(new { CacheKey = cacheKey });
-        HttpContent httpContent = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
-        await _httpClient.PostAsync("https://localhost:44312/cache/cache-updated", httpContent)
+
+        HttpContent httpContent = new StringContent(string.Empty);
+        httpContent.Headers.Add("cacheKey", CacheKey);
+
+        await _httpClient.PostAsync($"{_signalROptions.NotificationHubBaseUrl}/api/cache/notification/cacheupdated", httpContent)
             .ContinueWith(task =>
             {
-                if (task.IsCompletedSuccessfully)
+                if (task.IsCompletedSuccessfully && task.Result.IsSuccessStatusCode)
                 {
-                    // Handle success
-                    var s = task.Result;
+                    ViewData["SuccessMessage"] = $"Cache update notification sent successfully for key: {CacheKey}." +
+                    $" Please refresh to see if the value persist.";
                 }
                 else
                 {
                     // Handle failure
-                    var s = task.Result;
+                    var result = task.Result;
+                    ModelState.AddModelError(string.Empty, $"Something happend while sending the request to [cacheupdated]. " +
+                        $"Status Code: {result.ReasonPhrase}. Reason Phrase: {result.ReasonPhrase}");
                 }
             });
     }

@@ -1,4 +1,11 @@
 services:
+  netcore_signalr.notification.api:
+    image: ${DOCKER_REGISTRY-}netcoresignalrnotificationapi
+    build:
+      context: .
+      dockerfile: NetCore_SignalR.Notification.Api/Dockerfile
+
+
   netcore_signalr.client.a:
     image: ${DOCKER_REGISTRY-}netcoresignalrclienta
     build:
@@ -12,9 +19,3 @@ services:
       context: .
       dockerfile: NetCore_SignalR.Client.B/Dockerfile
 
-
-  netcore_signalr.notification.api:
-    image: ${DOCKER_REGISTRY-}netcoresignalrnotificationapi
-    build:
-      context: .
-      dockerfile: NetCore_SignalR.Notification.Api/Dockerfile

@@ -1,4 +1,17 @@
 services:
+  netcore_signalr.notification.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development.Docker
+      - ASPNETCORE_HTTP_PORTS=54321
+    ports:
+      - "5262:54321"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+
+
   netcore_signalr.client.a:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development.Docker
@@ -29,16 +42,3 @@ services:
     depends_on:
       netcore_signalr.notification.api:
         condition: service_started
-
-
-  netcore_signalr.notification.api:
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development.Docker
-      - ASPNETCORE_HTTP_PORTS=54321
-    ports:
-      - "5262:54321"
-    volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
-      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
-      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro

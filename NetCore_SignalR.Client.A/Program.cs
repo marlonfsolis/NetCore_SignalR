@@ -1,4 +1,6 @@
+using Microsoft.Extensions.Caching.Memory;
 using NetCore_SignalR.Client.A.Extensions;
+using NetCore_SignalR.Common.CacheStore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +24,8 @@ builder.Services.AddCacheNotificationHub(builder);
 
 builder.Services.AddHttpClient();
 
+builder.Services.AddOptions<SignalROptions>().BindConfiguration("SignalR");
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -38,5 +42,7 @@ app.MapStaticAssets();
 
 app.MapRazorPages()
    .WithStaticAssets();
+
+app.UseNotificationHubEvents();
 
 app.Run();

@@ -20,8 +20,8 @@ public class CacheNotificationController : ControllerBase
         return "Cache Notification Hub is ready!";
     }
 
-    [HttpGet("cacheupdated", Name = "NotifyCacheUpdated")]
-    public async Task NotifyCacheUpdated([FromQuery] string cacheKey)
+    [HttpPost("cacheupdated", Name = "NotifyCacheUpdated")]
+    public async Task NotifyCacheUpdated([FromHeader] string cacheKey)
     {
         await _hubContext.Clients.All.CacheUpdated(cacheKey);
     }
