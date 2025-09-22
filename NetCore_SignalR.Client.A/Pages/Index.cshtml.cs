@@ -71,4 +71,32 @@ public class IndexModel : PageModel
                 }
             });
     }
+
+    public async Task OnPostInvokeUpdated()
+    {
+        ModelState.Clear();
+
+        if (string.IsNullOrEmpty(CacheKey))
+        {
+            ModelState.AddModelError(string.Empty, $"Cache key cannot be null.");
+            return;
+        }
+
+        await _cacheNotificationHubConnection.InvokeAsync("NotifyCacheUpdated", CacheKey)
+            .ContinueWith(task =>
+            {
+                if (task.IsCompletedSuccessfully)
+                {
+                    ViewData["SuccessMessage"] = $"Cache update notification sent successfully for key: {CacheKey}." +
+                    $" Please refresh to see if the value persist.";
+                }
+                else
+                {
+                    // Handle failure
+                    var exception = task.Exception;
+                    ModelState.AddModelError(string.Empty, $"Something happend while sending the request to [CacheUpdated] via SignalR. " +
+                        $"Exception: {exception?.GetBaseException().Message}");
+                }
+            });
+    }
 }
