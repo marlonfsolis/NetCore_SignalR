@@ -1,6 +1,6 @@
 ﻿namespace NetCore_SignalR.Common.Constants;
 
-public static class SessionKeys
+public class SessionKeys
 {
-    public static readonly string KeySent = "KeySent";
+    public const string KeySent = "KeySent";
 }
