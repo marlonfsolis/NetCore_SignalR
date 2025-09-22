@@ -1,10 +1,8 @@
-using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
-using NetCore_SignalR.Common.CacheStore;
 
 namespace NetCore_SignalR.Client.A.Pages;
 
@@ -12,7 +10,6 @@ public class IndexModel : PageModel
 {
     private readonly ILogger<IndexModel> _logger;
     private readonly IMemoryCache _memoryCache;
-    private readonly IAppCache _appCache;
     private readonly HttpClient _httpClient;
     private readonly SignalROptions _signalROptions;
     private readonly AppHubConnectionOptions _appHubConnectionOptions;
@@ -21,14 +18,12 @@ public class IndexModel : PageModel
     public IndexModel(
         ILogger<IndexModel> logger,
         IMemoryCache memoryCache,
-        IAppCache appCache,
         HttpClient httpClient, 
         IOptions<AppHubConnectionOptions> appHubConnectionOptions,
         IOptions<SignalROptions> signalROptions)
     {
         _logger = logger;
         _memoryCache = memoryCache;
-        _appCache = appCache;
         _httpClient = httpClient;
         _signalROptions = signalROptions.Value;
         _appHubConnectionOptions = appHubConnectionOptions.Value;

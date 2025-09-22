@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
-using Microsoft.Extensions.Caching.Memory;
-using NetCore_SignalR.Common.CacheStore;
 
 namespace NetCore_SignalR.Client.A.Extensions;
 

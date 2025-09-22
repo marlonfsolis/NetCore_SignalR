@@ -1,6 +1,4 @@
-using Microsoft.Extensions.Caching.Memory;
 using NetCore_SignalR.Client.A.Extensions;
-using NetCore_SignalR.Common.CacheStore;
 
 var builder = WebApplication.CreateBuilder(args);
 
